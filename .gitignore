@@ -1,3 +1,6 @@
+# Supabase
+supabase/functions/.env
+dbDump/*
 # Logs
 logs
 *.log
