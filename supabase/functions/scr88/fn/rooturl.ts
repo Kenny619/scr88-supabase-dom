@@ -1,29 +1,24 @@
 import type { Context } from "jsr:@hono/hono/";
 import type { BlankEnv, BlankInput } from "jsr:@hono/hono/types";
 import * as val from "../utils/validator.helper.ts";
-import createResponse from "../utils/response.helper.ts";
-const rooturl = async (c: Context<BlankEnv, "/scr88/rootUrl", BlankInput>) => {
-    let url: string;
+const rooturl = async (c: Context<BlankEnv, "/scr88/rooturl", BlankInput>) => {
     try {
-        const req = await c.req.json();
-        url = req.input;
-        if (!val.isUrl(url)) {
-            return createResponse(
-                false,
-                `URL ${url} is not in a valid URL format`,
-                400,
-            );
+        const input = (await c.req.json()).input || null;
+        if (!input) {
+            return c.json({ result: null, err: "rootURL input missing" });
+        }
+        if (!val.isUrl(input)) {
+            return c.json({
+                result: null,
+                err: `URL ${input} is not in a valid URL format`,
+            });
         }
 
-        return await val.isUrlAlive(url)
-            ? createResponse(
-                true,
-                JSON.stringify({ pass: true, result: url }),
-                200,
-            )
-            : createResponse(false, `URL ${url} is not reachable`, 200);
+        return await val.isUrlAlive(input)
+            ? c.json({ result: input, err: null })
+            : c.json({ result: null, err: `URL ${input} is not reachable` });
     } catch (e) {
-        return createResponse(false, `fetch failed. ${e}`, 400);
+        return c.json({ result: null, err: `fetch failed. ${e}` });
     }
 };
 

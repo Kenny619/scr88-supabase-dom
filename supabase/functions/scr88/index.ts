@@ -7,7 +7,9 @@ import name from "./fn/name.ts";
 import getSiteCategory from "./fn/getSiteCategory.ts";
 import rooturl from "./fn/rooturl.ts";
 import entryurl from "./fn/entryurl.ts";
-
+import lasturl from "./fn/lasturl.ts";
+import lasturlregex from "./fn/lasturlregex.ts";
+import indexlinks from "./fn/indexlinks.ts";
 //initialize Hono
 const functionName = "scr88";
 const app = new Hono().basePath(`/${functionName}`);
@@ -19,10 +21,13 @@ const supabase = createClient(
 );
 
 //Routing
-app.post("/getSiteCategory", async (_) => await getSiteCategory(supabase));
+app.post("/getsitecategory", async (c) => await getSiteCategory(c, supabase));
 app.post("/name", async (c) => await name(c, supabase));
-app.post("/rootUrl", async (c) => await rooturl(c));
-app.post("/entryUrl", async (c) => await entryurl(c, supabase));
+app.post("/rooturl", async (c) => await rooturl(c));
+app.post("/entryurl", async (c) => await entryurl(c, supabase));
+app.post("/lasturl", async (c) => await lasturl(c, supabase));
+app.post("/lasturlregex", async (c) => await lasturlregex(c, supabase));
+app.post("/indexlinks", async (c) => await indexlinks(c, supabase));
 
 Deno.serve(app.fetch);
 /* To invoke locally:
