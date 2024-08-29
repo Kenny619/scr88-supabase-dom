@@ -1,8 +1,12 @@
-import { fetchFn, runFn } from "./helper.tests.ts";
+import { createClient } from "@supabase/supabase-js";
 
-try {
-    const res = await fetchFn("getsitecategory", "input", "test");
-    console.log(await res?.json());
-} catch (e) {
-    console.log("e:", e as Error);
-}
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY,
+);
+
+const { data, error } = await supabase.functions.invoke(
+    "scr88/getsitecategory",
+);
+
+console.log(data, error);

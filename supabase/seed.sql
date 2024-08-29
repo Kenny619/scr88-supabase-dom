@@ -1,0 +1,1 @@
+INSERT INTO "public"."site_category" ("name") VALUES ('Jlores'), ('Wincestory');

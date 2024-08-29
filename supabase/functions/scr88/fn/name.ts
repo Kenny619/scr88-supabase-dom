@@ -1,7 +1,6 @@
 import type { Context } from "jsr:@hono/hono/";
 import type { BlankEnv, BlankInput } from "jsr:@hono/hono/types";
 import type { SupabaseClient } from "jsr:@supabase/supabase-js@2";
-import { err, result } from "../utils/context.helper.ts";
 const name = async (
     c: Context<BlankEnv, "/scr88/name", BlankInput>,
     supabase: SupabaseClient,
@@ -40,7 +39,12 @@ const name = async (
             err: null,
         });
     } catch (error) {
-        return err(error);
+        return c.json({
+            result: null,
+            err: `Internal Server Error:  Failed to check DB. ${
+                JSON.stringify(error)
+            }`,
+        });
     }
 };
 
