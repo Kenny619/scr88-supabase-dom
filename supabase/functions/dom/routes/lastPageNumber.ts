@@ -1,7 +1,6 @@
 import type { Context } from "jsr:@hono/hono/";
 import val from "../utils/validators.ts";
-import * as dom from "../utils/dom.ts";
-import { extractFromDOM } from "../utils/dom.ts";
+import { readDOM, extractFromDOM } from "../utils/dom.ts";
 
 const lastPageNumber = async (c: Context) => {
 	//validate URL
@@ -9,7 +8,7 @@ const lastPageNumber = async (c: Context) => {
 	if (data === null) return c.json({ err, data: null });
 
 	//read DOM
-	const { err: errDom, data: doc } = await dom.readDOM(data.url);
+	const { err: errDom, data: doc } = await readDOM(data.url);
 	if (errDom !== null) return c.json({ err: errDom, data: null });
 
 	//get last link

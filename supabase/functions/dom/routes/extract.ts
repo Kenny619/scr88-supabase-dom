@@ -16,20 +16,30 @@ type Extract = <T extends extractType>(
 	c: Context,
 ) => Promise<T extends singleType ? singleReturnType : multipleReturnType>;
 
+/**
+ * Handles the extraction of elements from a given URL based on the provided selector and type.
+ * @param {Context} c - The Hono context object containing the request data.
+ * @returns {Promise<singleReturnType | multipleReturnType>} A promise that resolves to the extracted data or an error message.
+ */
 const extract = async (c: Context) => {
+	// Validate the input data
 	const { err, data } = await val(c, "extract");
 	if (data === null) return c.json({ err, data: null });
 
-	//read DOM
+	// Read the DOM from the provided URL
 	const { err: errDom, data: doc } = await dom.readDOM(data.url);
 	if (errDom !== null) return c.json({ err: errDom, data: null });
 
-	//get index links
+	// Check if the extraction type is provided
 	if (data.type === undefined)
 		return c.json({ err: "data.type missing", data: null });
-	const { err: errExtract, data: links } = ["link", "text", "node"].includes(
-		data.type,
-	)
+
+	// Perform the extraction based on the type
+	const { err: errExtract, data: extractedData } = [
+		"link",
+		"text",
+		"node",
+	].includes(data.type)
 		? extractFromDOM(
 				data.type as singleType,
 				data.selector as string,
@@ -40,8 +50,9 @@ const extract = async (c: Context) => {
 				data.selector as string,
 				doc as string,
 			);
+
 	if (errExtract !== null) return c.json({ err: errExtract, data: null });
-	return c.json({ err: null, data: links });
+	return c.json({ err: null, data: extractedData });
 };
 
 export default extract;
