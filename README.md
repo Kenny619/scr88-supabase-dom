@@ -92,7 +92,7 @@ Extracts specific elements from the DOM of a given URL.
 
 **Input:**
 
-~~~json
+~~~typescript
 {
   "url": "https://example.com",
   "selector": "css-selector",
@@ -102,7 +102,7 @@ Extracts specific elements from the DOM of a given URL.
 
 **Return Value:**
 
-~~~json
+~~~typescript
 {
   "err": null,
   "data": "extracted-content" | ["array", "of", "extracted", "content"]
